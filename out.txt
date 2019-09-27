@@ -1,0 +1,8 @@
+<account><username>ryaib</username><password>Gab14196y1!</password><cash>10000</cash><fname>paul</fname><lname>lindberg</lname><address>5340 burlingame</address></account>
+<account><username>test</username><password>homsarGAT!</password><cash>560</cash><fname>test</fname><lname>test</lname><address>test</address></account>
+<account><username>asdf</username><password>siskaisGAY!</password><cash>500</cash><fname>snark</fname><lname>always</lname><address></address></account>
+<account><username>presidents</username><password>Gab14196y1!</password><cash>0</cash><fname>j</fname><lname>j</lname><address>j</address></account>
+<account><username>blarby</username><password>Toenails@1</password><cash>1800</cash><fname>blarby</fname><lname>time</lname><address>123 tomstead</address></account>
+<account><username>newuser</username><password>passwordA1!</password><cash>500</cash><fname>nate</fname><lname>bannes</lname><address>932 Nonesense</address></account>
+<account><username>user1</username><password>passwordA1!</password><cash>0</cash><fname>fkjjk</fname><lname>kjl</lname><address>jkj</address></account>
+<account><username>daniel</username><password>passwordA1!</password><cash>1100</cash><fname>daniel</fname><lname>asdf</lname><address>asdf</address></account>
