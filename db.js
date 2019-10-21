@@ -6,7 +6,7 @@ var app = express();
 var bleach = require('bleach');
 const sessions = require('client-sessions');
 
-var accounts = [];
+var accounts = []; //temporary, used in place of a database, will need to be replaced
 const REGEX = [/<username>(.*?)<\/username>/g, /<password>(.*?)<\/password>/g, /<cash>(.*?)<\/cash>/g, /<fname>(.*?)<\/fname>/g, /<lname>(.*?)<\/lname>/g, /<address>(.*?)<\/address>/g,];
 const REPLACE = /<\/?[^>]+(>|$)/g;
 
@@ -17,11 +17,12 @@ app.use(sessions({
 	secret: 'ksdf76s78dHSDKFJSDKF8HJJ737j',
 	duration: 24 * 60 * 60 * 1000,
 	activeDuration: 1000 * 60 * 5,
-	}));
+	}));//generates cookie and keeps the session active for the alloted duration
 
 var accountStrings = [];
 
-
+//Main function that handles the dashboard webpage when logged in, raw HTML needs to be insterted to account for changing values.
+//Should replace this with templates. This only handles the display of the dashboard page, not the actual logic.
 function generateDash(username, money, error){
 
 if(!money)
@@ -71,7 +72,7 @@ return page;
 }
 
 
-
+//Function that's called every time the txt database is built, will need to be replaced with an actual one.
 function buildDB(){
 	fs.writeFileSync("out.txt", "<account><username>" + accounts[0].username + "</username><password>"
 	 	+ accounts[0].pass + "</password><cash>" + accounts[0].cash + "</cash><fname>" + accounts[0].fname + "</fname><lname>" + accounts[0].lname + "</lname><address>" + accounts[0].address + "</address></account>\n"); 
@@ -84,7 +85,7 @@ function buildDB(){
 	 }
 }
 
-
+//Converts two strings to ints and returns the sum
 function parseAdd(val1, val2){
 
 var a = parseInt(val1, 10);
@@ -94,10 +95,10 @@ var b = parseInt(val2, 10);
 return a + b;
 }
 
-
-
 //END OF GLOBALS
 
+
+//Takes the data from the out.txt file and removes XML tags.
 function parseUser(list, index, reg){
 
 let final = list[index].match(REGEX[reg]).map(function(val){
@@ -105,9 +106,9 @@ let final = list[index].match(REGEX[reg]).map(function(val){
 });
 return final[0];
 }
-//Takes the data from the out.txt file and removes XML tags.
 
 
+//Returns the index value of the specified user
 function userIndex(user){
 for (let i = 0; i<accounts.length;++i){
 	if (user === accounts[i].username)
@@ -118,7 +119,7 @@ for (let i = 0; i<accounts.length;++i){
 
 
 
-
+//Password verification
 function check_pass(val)
 {
     var no = 0;
@@ -161,7 +162,7 @@ function check_pass(val)
 
 
 
-
+//Testing function, doesn't do anything needed
 function escape(input){
 let final = input.replace(REPLACE, '');
 console.log("Escape results: " + final);
@@ -169,6 +170,7 @@ return final;
 
 }
 
+//Account creation function, simply creates an instance of an object and assigns it.
 function createAccount(username, pass, cash, fname, lname, address){
 	this.username = username;
 	this.pass = pass;
@@ -180,6 +182,7 @@ function createAccount(username, pass, cash, fname, lname, address){
 //Creates an instance of an account object
 
 
+//Function that checks if a username is already entered in the database.
 function accountValid(user){
 
 
@@ -199,7 +202,7 @@ return true;
 
 
 
-
+//
 function accountVerify(user,pass){
 
 
@@ -218,13 +221,16 @@ return false;
 
 
 
-
+//The "main" of the webpage, the first function that will resolve when the index page is generated. Not the first function called
+//in control flow, but the first thing the user will "see".
 app.get("/", function(req,res){
 
 	res.sendFile(__dirname + "/index.html");
 	});
 //Called when the user requests the index page.
 
+
+//Handles the "logic" of the dashboard page that is generated in a function above.
 app.post("/dashboard", function(req, resp){
 	if (req.session.username)
 	{
@@ -318,14 +324,14 @@ app.post("/dashboard", function(req, resp){
 	}
 });
 
-
+//Logout function, resets the session and sends the user to the main index
 app.post("/logout", function(req, resp){
 	req.session.reset();
 	resp.redirect('/');
 
 });
 
-
+//HTML login function called on HTML action, sanitizes input and runs checks to see if the account is valid
 app.post("/login", function(req, resp){
 	console.log("login function");
 	let user = bleach.sanitize(req.body.user1);
@@ -345,6 +351,7 @@ app.post("/login", function(req, resp){
 
 });
 
+//Fetches data from the txt database, this will need to be overhauled.
 app.post("/getData", function(req, resp){
 	let user = bleach.sanitize(req.body.user);
 	let pass = bleach.sanitize(req.body.pass);
@@ -378,7 +385,8 @@ app.post("/getData", function(req, resp){
 
 });
 
-
+//Generic console activity, first code to actually run on startup. Final action is to set it to listen on port 3000 which is what
+//the browser will search for. Again this is the first place control flow starts at.
 let result = fs.readFileSync("out.txt", 'utf8');
 if (result){
 	var parse_list = result.split("\n");
